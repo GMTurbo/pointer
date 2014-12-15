@@ -87,7 +87,7 @@ var System = function(options) {
   
   var _makeGridLayout = function(){
     
-    var xDim=10, yDim=10;
+    var xDim=15, yDim=15;
     
     for (var i = 0; i < xDim; i++){
       for (var j = 0; j < yDim; j++){

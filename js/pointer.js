@@ -18,7 +18,7 @@ var Pointer = function(options) {
 };
 
 Pointer.prototype.getColor = function() {
-  var color= 'rgba(255,200,0,' + 200 + ')';
+  var color= '#FFFF00';
   return color;
 };
 
@@ -33,10 +33,10 @@ Pointer.prototype.draw = function(con) {
   pnt1 = this.pnt1, pnt2 = this.pnt2;
 
   con.beginPath();
-  con.arc(pnt2.x, pnt2.y, 5, 0, 2 * Math.PI, false);
+  con.arc(pnt2.x, pnt2.y, 2, 0, 2 * Math.PI, false);
   
-  con.arc(pnt1.x, pnt1.y, 10, 0, 2 * Math.PI, false);
-  con.fillStyle = 'blue';
+  con.arc(pnt1.x, pnt1.y, 6, 0, 2 * Math.PI, false);
+  con.fillStyle = '#FFFF00';
   con.fill();
   con.closePath();
 };
@@ -69,13 +69,13 @@ Pointer.prototype.update = function(lookAtMe){
   this.length = (distance > this.maxLength) ? this.maxLength : distance;
   
   this.pnt1 = {
-   x: center.x - (this.length/3) * Math.cos(this.angle),
-   y: center.y - (this.length/3) * Math.sin(this.angle)
+   x: center.x - (1*this.length/2) * Math.cos(this.angle),
+   y: center.y - (1*this.length/2) * Math.sin(this.angle)
   };
   
   this.pnt2 = {
-   x: center.x + (2*this.length/3) * Math.cos(this.angle),
-   y: center.y + (2*this.length/3) * Math.sin(this.angle)
+   x: center.x + (1*this.length/2) * Math.cos(this.angle),
+   y: center.y + (1*this.length/2) * Math.sin(this.angle)
   };
 };
 
