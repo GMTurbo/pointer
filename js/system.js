@@ -30,7 +30,7 @@ var System = function(options) {
     pointers = [];
 
   var setup = function() {
-
+  
     _createPointers();
   
     if(initial){
@@ -38,15 +38,12 @@ var System = function(options) {
       updateSystem();
     }
   };
-
-  var _createPointers = function(){
-
-    pointers = [];
-
+  
+  var _makeCircularLayout = function(){
     var center = {x: ~~(width/2), y: ~~(height/2)};
-    var radius = 300;
+    var radius = 300, i = 0;
     //outer ring1
-    for (var i = 0; i < 2*Math.PI; i+=Math.PI/36.0){
+    for ( i = 0; i < 2*Math.PI; i+=Math.PI/36.0){
       pointers.push(new Pointer({
         center: {
           x: center.x + radius*Math.cos(i),
@@ -61,7 +58,7 @@ var System = function(options) {
     radius = 200;
 
     //middle ring
-    for (var i = 0; i < 2*Math.PI; i+=Math.PI/24.0){
+    for ( i = 0; i < 2*Math.PI; i+=Math.PI/24.0){
       pointers.push(new Pointer({
         center: {
           x: center.x + radius*Math.cos(i),
@@ -74,8 +71,8 @@ var System = function(options) {
     }
     
     //inner ring
-    var radius = 100;
-    for (var i = 0; i < 2*Math.PI; i+=Math.PI/16.0){
+    radius = 100;
+    for ( i = 0; i < 2*Math.PI; i+=Math.PI/16.0){
       pointers.push(new Pointer({
         center: {
           x: center.x + radius*Math.cos(i),
@@ -86,6 +83,38 @@ var System = function(options) {
         level: 1
       }));
     }
+  };
+  
+  var _makeGridLayout = function(){
+    
+    var xDim=10, yDim=10;
+    
+    for (var i = 0; i < xDim; i++){
+      for (var j = 0; j < yDim; j++){
+        pointers.push(new Pointer({
+          center: {
+            x: 30 + i * width/xDim,
+            y: 30 + j * height/yDim
+          },
+          target: target,
+          length: 60,
+          level: 1
+        }));
+      }
+    }
+  };
+  
+  var _createPointers = function(){
+    
+    var circles = (~~(Math.random() * 100) % 2 === 0);
+    
+    pointers = [];
+    
+    if(circles){
+      _makeCircularLayout()
+    }else{
+      _makeGridLayout();
+    }
 
   };
 
@@ -95,9 +124,10 @@ var System = function(options) {
 
     drawTarget();
     
-    connectPointers(context);
+    //connectPointers(context);
     
     pointers.forEach(function(pointer){
+      pointer.drawLine(context);
       pointer.draw(context);
     });
   }

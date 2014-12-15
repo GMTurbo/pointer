@@ -3,11 +3,12 @@ var Pointer = function(options) {
     center: {x: 0, y:0},
     target: undefined,
     length: 100,
-    level: 0
+    level: 1
   });
   this.level = options.level;
   this.angle = 0;
   this.length = options.length;
+  this.maxLength = options.length*(4-this.level)/4;
   this.center = options.center;
   this.pnt1 = {x:0, y:0};
   this.pnt2 = {x:0, y:0};
@@ -32,17 +33,6 @@ Pointer.prototype.draw = function(con) {
   pnt1 = this.pnt1, pnt2 = this.pnt2;
 
   con.beginPath();
-
-  con.lineWidth = 1;
-  con.strokeStyle = 'rgba(255,255,255,' + 255 + ')';
-  //con.shadowColor   = 'rgba(226,225,142,1)';
-// con.globalAlpha=opacity; // Half opacity
-  //con.moveTo(pnt1.x, pnt1.y);
-  
-  //con.lineTo(pnt2.x, pnt2.y);
-  
-  //con.stroke();
-   
   con.arc(pnt2.x, pnt2.y, 5, 0, 2 * Math.PI, false);
   
   con.arc(pnt1.x, pnt1.y, 10, 0, 2 * Math.PI, false);
@@ -51,6 +41,21 @@ Pointer.prototype.draw = function(con) {
   con.closePath();
 };
 
+Pointer.prototype.drawLine = function(con){
+  con.beginPath();
+
+  con.lineWidth = 1;
+  con.strokeStyle = 'rgba(255,255,255,' + 255 + ')';
+  //con.shadowColor   = 'rgba(226,225,142,1)';
+// con.globalAlpha=opacity; // Half opacity
+  con.moveTo(this.pnt1.x, this.pnt1.y);
+  
+  con.lineTo(this.pnt2.x, this.pnt2.y);
+  
+  con.stroke();
+  con.closePath();
+}
+
 Pointer.prototype.getCenter = function() {
   return this.center;
 };
@@ -58,6 +63,11 @@ Pointer.prototype.getCenter = function() {
 Pointer.prototype.update = function(lookAtMe){
   this.calculateAngle(lookAtMe);
   var center = this.getCenter();
+  
+  var distance = helper.getDistance(this.pnt1, lookAtMe);
+  
+  this.length = (distance > this.maxLength) ? this.maxLength : distance;
+  
   this.pnt1 = {
    x: center.x - (this.length/3) * Math.cos(this.angle),
    y: center.y - (this.length/3) * Math.sin(this.angle)
@@ -73,3 +83,14 @@ Pointer.prototype.calculateAngle = function(lookAt){
   var center = this.getCenter();
   this.angle = Math.atan2((lookAt.y - center.y),(lookAt.x - center.x));
 };
+
+var helper = (function(){
+  
+  var getDistance = function(pnt1, pnt2){
+    return Math.sqrt(Math.pow(pnt1.x-pnt2.x, 2) + Math.pow(pnt1.y-pnt2.y, 2));
+  };
+  
+  return {
+    getDistance: getDistance
+  }
+})();
